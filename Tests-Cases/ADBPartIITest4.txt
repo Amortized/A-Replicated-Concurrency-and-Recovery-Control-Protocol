@@ -1,0 +1,42 @@
+// Test 4
+//
+// Main Test Idea:
+// ---------------
+// - Test the interaction of the wait-die with the recovery mechanisms
+//
+// T2 should wait for T4 for the lock on x2, since T4 is younger.
+// T4 should abort since site 3 has x2.  Now, the following should
+//   happen:
+//   - T2 read x2 from site 3, so T2 has to fail.
+//   - T2 read x2 from somewhere else, so it shouldn't fail.  Instead, TM
+//     should tell it to try to get a write lock from sites 1, 2, and 3.
+//     It only gets locks from sites 1 and 2, but that's ok, and it should
+//     still commit a written version to sites 1 and 2.
+//   - When the TM notices after 3 ticks that site 3 is down, the re-
+//     replication should take place.
+//   - If you implemented the "not available until written" protocol for
+//     replicated variables, the site newly responsible for x2 should not
+//     have a readable copy of it until x2 is written again by T1.
+
+begin(T1)
+begin(T2)
+begin(T3)
+begin(T4)
+dump()
+R(T4,x2)
+W(T4,x2,12)
+R(T2,x2)
+R(T3,x4)
+W(T2,x2,2); W(T3,x4,4)
+end(T3)
+dump()
+fail(3)
+R(T1,x4)
+end(T2)
+dump()
+W(T1,x4,44)
+R(T1,x2)
+W(T1,x2,88)
+end(T1)
+dump()
+end(T4)

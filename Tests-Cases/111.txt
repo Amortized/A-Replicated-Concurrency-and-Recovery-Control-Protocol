@@ -1,0 +1,33 @@
+// Test 2
+//
+// Main Test Idea:
+// ---------------
+// - Test that when a TX tries to get a lock at a failed site which hasn't
+//   been down for 3 time steps, and thus that the TM has yet to mark as down,
+//   the TX tries to get a lock on that site for the variable and eventually
+//   fails, either at commit time or via a timeout.
+//
+// Variable x2 is at site 2, so T1 should be told by TM to get a lock there
+// Thus T1 should fail to commit
+
+begin(T1)
+begin(T2)
+dump()
+R(T1,x1)
+fail(2)
+recover(2)
+W(T2,x1,1)
+R(T2,x3)
+fail(2)
+W(T1,x2,2)
+W(T2,x3,3)
+R(T2,x5)
+W(T2,x5,5)
+R(T2,x7)
+W(T2,x7,7)
+end(T1)
+dump()
+end(T2)
+dump()
+recover(2)
+dump()

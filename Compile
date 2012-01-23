@@ -1,0 +1,5 @@
+gcc -g -c main.c -o o1
+gcc -g -c transaction_manager.c -o o2
+gcc -g -c site.c -o o3
+gcc -g o1 o2 o3 -o project
+rm -rf o1 o2 o3

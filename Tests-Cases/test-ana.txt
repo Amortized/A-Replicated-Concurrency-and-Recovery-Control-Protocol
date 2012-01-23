@@ -1,0 +1,8 @@
+begin(T1)
+begin(T2)
+fail(2)
+R(T1,x1)
+dump()
+W(T2,x1,1)
+end(T2)
+

@@ -1,0 +1,34 @@
+// Test 3
+//
+// Main Test Idea:
+// ---------------
+// - Exercise the load balancing mechanisms a lot.  All variables should remain
+//   replicated at 3 sites even though 4 of the 10 sites go down.
+
+begin(T1)
+begin(T2)
+dump()
+R(T1,x1); R(T2,x2)
+R(T1,x3); R(T2,x4)
+fail(7)
+dump()
+fail(8)
+dump()
+fail(9)
+dump()
+W(T1,x1,1)
+fail(10)
+dump()
+recover(8)
+dump()
+W(T2,x2,2)
+recover(9)
+dump()
+begin(T3)
+begin(T4)
+W(T3,x3,3)
+recover(7)
+dump()
+W(T4,x4,4)
+recover(10)
+dump()

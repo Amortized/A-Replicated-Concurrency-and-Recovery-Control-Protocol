@@ -1,0 +1,32 @@
+// Test 5
+//
+// Main Test Idea:
+// ---------------
+// - See what happens when all sites for a given replicated var go down
+//
+// At the very least you shouldn't crash.
+// T1 might fail due to timeout
+// When all 3 sites come back up, at least at this point x2 should be available
+// again for T3.
+
+begin(T1)
+begin(T2)
+dump()
+fail(1); fail(2); fail(3)
+R(T1,x2); R(T2,x9)
+R(T2,x4)
+W(T2,x9,9)
+W(T2,x4,4)
+dump()
+recover(1)
+dump()
+end(T1)
+recover(2)
+dump()
+end(T2)
+recover(3)
+dump()
+begin(T3)
+W(T3,x2,22)
+end(T3)
+dump()
